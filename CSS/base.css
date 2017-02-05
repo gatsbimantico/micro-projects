@@ -132,7 +132,7 @@ body > nav > section#content > div + div {
 }
 
 body > nav > section#content > div > h2 {
-	margin-bottom: 1rem;
+	margin-bottom: 0.5rem;
 }
 
 iframe,
@@ -150,10 +150,11 @@ iframe,
 	background-size: cover;
 }
 
+select,
 input {
 	width: 100%;
 	padding: 0.5rem;
-	margin: 1em 0;
+	margin: 0.5em 0;
 }
 
 @media (min-width: 676px) {
