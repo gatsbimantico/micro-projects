@@ -64,30 +64,43 @@ body > footer {
 	background: rgba(0, 0, 0, 0.2);
 }
 
-body > nav > ul {
+body > nav > section#navigation {
 	display: table-cell;
 	position: relative;
 	vertical-align: top;
 	width: 30vw;
+	box-shadow: -8px 0 10px -6px rgba(0, 0, 0, 0.2) inset;
+	background: rgba(0, 0, 0, 0.6);
+}
+
+body > nav > section#navigation > ul {
+	display: block;
 	height: 100%;
 	list-style: none;
 	padding: 0;
-	box-shadow: -8px 0 10px -6px rgba(0, 0, 0, 0.2) inset;
-	background: rgba(0, 0, 0, 0.6);
 	overflow: auto;
 }
 
-body > nav > ul > h3,
-body > nav > ul > li {
+body > nav > section#navigation h3 {
+	text-transform: uppercase;
+}
+
+body > nav > section#navigation h3,
+body > nav > section#navigation a > li {
 	line-height: 3rem;
 	padding: 0 1rem;
 }
 
-body > nav > ul > li:hover {
+body > nav > section#navigation a {
+	text-decoration: none;
+	color: #EEE;
+}
+
+body > nav > section#navigation > a > li:hover {
 	background: rgba(0, 0, 0, 0.2);
 }
 
-body > nav > section {
+body > nav > section#content {
 	display: table-cell;
 	position: relative;
 	vertical-align: top;
@@ -96,14 +109,14 @@ body > nav > section {
 	overflow: auto;
 }
 
-body > nav > ul + section {
+body > nav > section#navigation + section#content {
 	display: table-cell;
 	vertical-align: top;
 	width: 70vw;
 	height: 100%;
 }
 
-body > nav > section > div {
+body > nav > section#content > div {
 	max-width: 640px;
 	margin: 0 auto;
 	position: relative;
@@ -114,8 +127,12 @@ body > nav > section > div {
 	box-shadow: 0 8px 10px -6px rgba(0, 0, 0, 0.6);
 }
 
-body > nav > section > div + div {
+body > nav > section#content > div + div {
 	border-top: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+body > nav > section#content > div > h2 {
+	margin-bottom: 1rem;
 }
 
 iframe,
@@ -126,14 +143,7 @@ iframe,
 	background-position: center;
 	background-repeat: no-repeat;
 	border: 1px solid rgba(0, 0, 0, 0.3);
-}
-
-iframe {
 	margin: 1rem 0;
-}
-
-.img {
-	margin: 1rem -1rem;
 }
 
 .img.background {
@@ -147,16 +157,16 @@ input {
 }
 
 @media (min-width: 676px) {
-	body > nav > section {
+	body > nav > section#content {
 		padding: 1rem;
 	}
-	body > nav > section > div {
+	body > nav > section#content > div {
 		border-radius: 4px;
 	}
 }
 
 @media (min-width: 676px) and (max-width: 899px) {
-	body > nav > section > div + div {
+	body > nav > section#content > div + div {
 		border-top-left-radius: 0;
 		border-top-right-radius: 0;
 		margin-top: -4px;
@@ -164,12 +174,12 @@ input {
 }
 
 @media (min-width: 900px) {
-	body > nav > section {
+	body > nav > section#content {
 		display: block;
 		column-count: 2;
 		height: 100%;
 	}
-	body > nav > section > div {
+	body > nav > section#content > div {
 		min-width: 320px;
 		width: 100%;
 		break-inside: avoid;
