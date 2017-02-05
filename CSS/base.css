@@ -118,11 +118,21 @@ body > nav > section > div + div {
 	border-top: 1px solid rgba(0, 0, 0, 0.3);
 }
 
+iframe,
 .img {
+	width: 100%;
 	min-height: 180px;
 	background-size: contain;
 	background-position: center;
 	background-repeat: no-repeat;
+	border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+iframe {
+	margin: 1rem 0;
+}
+
+.img {
 	margin: 1rem -1rem;
 }
 
