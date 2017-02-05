@@ -1,0 +1,168 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	font-weight: 100;
+	font-family: sans-serif;
+}
+
+html,
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+}
+
+body {
+	display: table;
+	background: crimson;
+	color: #EEE;
+	font-size: 1.8vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0;
+	font-weight: 100;
+}
+
+body > header,
+body > footer {
+	display: table-row;
+	position: relative;
+}
+
+body > nav {
+	display: table;
+}
+
+.header-item,
+.footer-item {
+	display: table-cell;
+	vertical-align: middle;
+	padding: 0 1rem;
+}
+
+body > header {
+	height: 9vh;
+	box-shadow: 0 -3px 10px 6px rgba(0, 0, 0, 0.2);
+}
+
+body > nav {
+	position: relative;
+	height: 88vh;
+}
+
+body > footer {
+	height: 3vh;
+	font-size: 0.8em;
+	text-align: right;
+	box-shadow: 0 3px 10px 6px rgba(0, 0, 0, 0.2);
+	background: rgba(0, 0, 0, 0.2);
+}
+
+body > nav > ul {
+	display: table-cell;
+	position: relative;
+	vertical-align: top;
+	width: 30vw;
+	height: 100%;
+	list-style: none;
+	padding: 0;
+	box-shadow: -8px 0 10px -6px rgba(0, 0, 0, 0.2) inset;
+	background: rgba(0, 0, 0, 0.6);
+	overflow: auto;
+}
+
+body > nav > ul > li {
+	line-height: 3rem;
+	padding: 0 1rem;
+}
+
+body > nav > ul > li:hover {
+	background: rgba(0, 0, 0, 0.2);
+}
+
+body > nav > section {
+	display: table-cell;
+	position: relative;
+	vertical-align: top;
+	width: 100vw;
+	background: rgba(0, 0, 0, 0.4);
+	overflow: auto;
+}
+
+body > nav > ul + section {
+	display: table-cell;
+	vertical-align: top;
+	width: 70vw;
+	height: 100%;
+}
+
+body > nav > section > div {
+	max-width: 640px;
+	margin: 0 auto;
+	position: relative;
+	padding: 1rem;
+	background: white;
+	color: #333;
+	border-radius: 0px;
+	box-shadow: 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+}
+
+body > nav > section > div + div {
+	border-top: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.img {
+	min-height: 180px;
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	margin: 1rem -1rem;
+}
+
+.img.background {
+	background-size: cover;
+}
+
+input {
+	width: 100%;
+	padding: 0.5rem;
+	margin: 1em 0;
+}
+
+@media (min-width: 676px) {
+	body > nav > section {
+		padding: 1rem;
+	}
+	body > nav > section > div {
+		border-radius: 4px;
+	}
+}
+
+@media (min-width: 676px) and (max-width: 899px) {
+	body > nav > section > div + div {
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+		margin-top: -4px;
+	}
+}
+
+@media (min-width: 900px) {
+	body > nav > section {
+		display: block;
+		column-count: 2;
+		height: 100%;
+	}
+	body > nav > section > div {
+		min-width: 320px;
+		width: 100%;
+		break-inside: avoid;
+		border-bottom: 3px solid transparent;
+		margin-bottom: 1rem;
+	}
+}
