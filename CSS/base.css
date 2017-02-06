@@ -2,7 +2,7 @@
 	box-sizing: border-box;
 	margin: 0;
 	font-weight: 100;
-	font-family: sans-serif;
+	font-family: 'Roboto', sans-serif;
 }
 
 html,
@@ -47,13 +47,13 @@ body > nav {
 }
 
 body > header {
-	height: 9vh;
+	height: 7vh;
 	box-shadow: 0 -3px 10px 6px rgba(0, 0, 0, 0.2);
 }
 
 body > nav {
 	position: relative;
-	height: 88vh;
+	height: 90vh;
 }
 
 body > footer {
@@ -64,7 +64,7 @@ body > footer {
 	background: rgba(0, 0, 0, 0.2);
 }
 
-body > nav > section#navigation {
+body > nav > #navigation {
 	display: table-cell;
 	position: relative;
 	vertical-align: top;
@@ -73,7 +73,7 @@ body > nav > section#navigation {
 	background: rgba(0, 0, 0, 0.6);
 }
 
-body > nav > section#navigation > ul {
+body > nav > #navigation > ul {
 	display: block;
 	height: 100%;
 	list-style: none;
@@ -81,43 +81,50 @@ body > nav > section#navigation > ul {
 	overflow: auto;
 }
 
-body > nav > section#navigation h3 {
+body > nav > #navigation h3 {
 	text-transform: uppercase;
 }
 
-body > nav > section#navigation h3,
-body > nav > section#navigation a > li {
+body > nav > #navigation h3,
+body > nav > #navigation a > li {
 	line-height: 3rem;
 	padding: 0 1rem;
 }
 
-body > nav > section#navigation a {
+body > nav > #navigation a {
 	text-decoration: none;
 	color: #EEE;
 }
 
-body > nav > section#navigation > a > li:hover {
+body > nav > #navigation > a > li:hover {
 	background: rgba(0, 0, 0, 0.2);
 }
 
-body > nav > section#content {
+body > nav > #page {
 	display: table-cell;
 	position: relative;
 	vertical-align: top;
 	width: 100vw;
 	background: rgba(0, 0, 0, 0.4);
-	overflow: auto;
 }
 
-body > nav > section#navigation + section#content {
+body > nav > #navigation + #page {
 	display: table-cell;
 	vertical-align: top;
 	width: 70vw;
 	height: 100%;
 }
 
-body > nav > section#content > div {
+body > nav > #page > #content {
+	height: 100%;
+	overflow: auto;
+	transition: 350ms;
+}
+
+body > nav > #page > #content .card {
 	max-width: 640px;
+	min-width: 320px;
+	width: 100%;
 	margin: 0 auto;
 	position: relative;
 	padding: 1rem;
@@ -125,14 +132,19 @@ body > nav > section#content > div {
 	color: #333;
 	border-radius: 0px;
 	box-shadow: 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+	transition: 350ms;
 }
 
-body > nav > section#content > div + div {
+body > nav > #page > #content .card + .card {
 	border-top: 1px solid rgba(0, 0, 0, 0.3);
 }
 
-body > nav > section#content > div > h2 {
+body > nav > #page > #content .card > h2 {
 	margin-bottom: 0.5rem;
+}
+
+body > nav > #page > #content .card > h3 {
+	margin-top: 0.5rem;
 }
 
 iframe,
@@ -157,32 +169,12 @@ input {
 	margin: 0.5em 0;
 }
 
-@media (min-width: 676px) {
-	body > nav > section#content {
+@media (min-width: 640px) {
+	body > nav > #page > #content {
 		padding: 1rem;
 	}
-	body > nav > section#content > div {
+	body > nav > #page > #content .card {
 		border-radius: 4px;
-	}
-}
-
-@media (min-width: 676px) and (max-width: 899px) {
-	body > nav > section#content > div + div {
-		border-top-left-radius: 0;
-		border-top-right-radius: 0;
-		margin-top: -4px;
-	}
-}
-
-@media (min-width: 900px) {
-	body > nav > section#content {
-		display: block;
-		column-count: 2;
-		height: 100%;
-	}
-	body > nav > section#content > div {
-		min-width: 320px;
-		width: 100%;
 		break-inside: avoid;
 		border-bottom: 3px solid transparent;
 		margin-bottom: 1rem;

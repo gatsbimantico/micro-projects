@@ -4,6 +4,7 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<base href="../" target="_blank">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
 	<link rel="stylesheet" href="CSS/base.css">
 	<style>
 		.img-logo {
@@ -19,7 +20,7 @@
 		</div>
 	</header>
 	<nav>
-		<section id="navigation">
+		<div id="navigation">
 			<ul>
 				<h3>Title 1</h3>
 				<a>
@@ -29,27 +30,29 @@
 					<li>Link 2</li>
 				</a>
 			</ul>
-		</section>
-		<section id="content">
-			<div>
-				<h2>Title 1</h2>
-				<p>Body 1</p>
+		</div>
+		<div id="page">
+			<div id="content">
+				<div class="card">
+					<h2>Title 1</h2>
+					<p>Body 1</p>
+				</div>
+				<div class="card">
+					<h2>Title 2</h2>
+					<p>Body 2</p>
+					<div class="img img-logo"></div>
+				</div>
+				<div class="card">
+					<h2>Title 3</h2>
+					<div class="img background img-logo"></div>
+					<p>Body 3</p>
+				</div>
+				<div class="card">
+					<h3>Valor</h3>
+					<input>
+				</div>
 			</div>
-			<div>
-				<h2>Title 2</h2>
-				<p>Body 2</p>
-				<div class="img img-logo"></div>
-			</div>
-			<div>
-				<h2>Title 3</h2>
-				<div class="img background img-logo"></div>
-				<p>Body 3</p>
-			</div>
-			<div>
-				<h3>Valor</h3>
-				<input>
-			</div>
-		</section>
+		</div>
 	</nav>
 	<footer>
 		<div class="footer-item">
