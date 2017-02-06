@@ -3,16 +3,19 @@ require('http')
         if (req.url == '/favicon.ico') return;
 
         var json,
-            route = '.' + req.url;
-        console.log(req.method + ' ' + route);
+            status,
+            route = '.' + req.url.replace(/\?.*$/g,'');
 
         try {
             json = require('fs').readFileSync(route);
+            status = 200;
         } catch (e) {
             json = '{"status":"error"}';
+            status = 404;
         }
+        console.log(req.method, status, route);
 
-        res.writeHead(200, {
+        res.writeHead(status, {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'PUT, GET, POST, DELETE, OPTIONS',
