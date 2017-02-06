@@ -16,7 +16,6 @@ body {
 	display: table;
 	background: crimson;
 	color: #EEE;
-	font-size: 1.8vh;
 }
 
 h1,
@@ -47,17 +46,17 @@ body > nav {
 }
 
 body > header {
-	height: 7vh;
+	height: 4rem;
 	box-shadow: 0 -3px 10px 6px rgba(0, 0, 0, 0.2);
 }
 
 body > nav {
 	position: relative;
-	height: 90vh;
+	height: calc(100vh - 6rem);
 }
 
 body > footer {
-	height: 3vh;
+	height: 2rem;
 	font-size: 0.8em;
 	text-align: right;
 	box-shadow: 0 3px 10px 6px rgba(0, 0, 0, 0.2);
