@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<base href="../../" target="_blank">
+	<link rel="stylesheet" href="CSS/base.css">
+</head>
+
+<body>
+	<header>
+		<div class="header-item">
+			<h1>Array Tool</h1>
+		</div>
+	</header>
+	<nav>
+		<section id="content">
+			<div>
+				<h3>Array input</h3>
+				<input id="arrayinput" value="1080x920,270x270">
+				<input id="arrayinput" value="1080x920,270x270">
+				<div id="arrayoutput"></div>
+			</div>
+			<div>
+				<h3>String to split 1</h3>
+				<input id="split1" value=",">
+				<h3>String to split 2</h3>
+				<input id="split2" value="">
+			</div>
+			<div>
+				<h3>Search result</h3>
+				<input id="searchinput" value="">
+				<div id="searchoutput"></div>
+			</div>
+			<div>
+				<h3>Result</h3>
+				<div id="resultoutput"></div>
+			</div>
+		</section>
+	</nav>
+	<footer>
+		<div class="footer-item">
+			<span>Made with ❤</span>
+		</div>
+	</footer>
+
+	<script src="JS/ES6/array-tool.js"></script>
+	<script>
+		window.app = function () {
+			'use strict';
+
+			var app = {
+				model: {
+					arrayInput: document.getElementById('arrayinput'),
+					arrayOutput: document.getElementById('arrayoutput'),
+					split1: document.getElementById('split1'),
+					split2: document.getElementById('split2'),
+					searchInput: document.getElementById('searchinput'),
+					searchOutput: document.getElementById('searchoutput'),
+					resultOutput: document.getElementById('resultoutput')
+				},
+				controller: {
+					result: function () {
+
+					},
+					search: function () {
+
+					}
+				}
+			};
+
+			app.model.arrayInput.onkeyup = app.controller.result;
+			app.model.split1.onkeyup = app.controller.result;
+			app.model.split2.onkeyup = app.controller.result;
+			app.model.searchInput.onkeyup = app.controller.search;
+
+			return app;
+		}();
+	</script>
+</body>
+
+</html>

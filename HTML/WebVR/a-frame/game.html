@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>A text-based VR game</title>
+	<base href="../../../">
+	<script src="./JS/ES6/promises.js"></script>
+	<script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
+</head>
+
+<body>
+
+	<a-scene>
+		<a-entity geometry="primitive: circle; radius: 24;" position="0 -2 0" rotation="-90 0 0" material="color: teal">
+			<a-entity geometry="primitive: plane; width: 10; height: 3;" material="color: crimson" position="0 10 2" rotation="90 0 0" text="align: center; value: 0"></a-entity>
+		</a-entity>
+		<a-entity rotation="-90 -45 0">
+			<a-entity geometry="primitive: plane; width: 10; height: 3;" material="color: crimson" position="0 14 0" rotation="90 0 0" text="align: center; value: -45"></a-entity>
+		</a-entity>
+		<a-entity rotation="-90 45 0">
+			<a-entity geometry="primitive: plane; width: 10; height: 3;" material="color: crimson" position="0 14 0" rotation="90 0 0" text="align: center; value: 45"></a-entity>
+		</a-entity>
+		<a-entity rotation="-90 -90 0">
+			<a-entity geometry="primitive: plane; width: 10; height: 3;" material="color: crimson" position="0 10 0" rotation="90 0 0" text="align: center; value: -90"></a-entity>
+		</a-entity>
+		<a-entity rotation="-90 90 0">
+			<a-entity geometry="primitive: plane; width: 10; height: 3;" material="color: crimson" position="0 10 0" rotation="90 0 0" text="align: center; value: 90"></a-entity>
+		</a-entity>
+		<a-entity rotation="-90 -135 0">
+			<a-entity geometry="primitive: plane; width: 10; height: 3;" material="color: crimson" position="0 14 0" rotation="90 0 0" text="align: center; value: -135"></a-entity>
+		</a-entity>
+		<a-entity rotation="-90 135 0">
+			<a-entity geometry="primitive: plane; width: 10; height: 3;" material="color: crimson" position="0 14 0" rotation="90 0 0" text="align: center; value: 135"></a-entity>
+		</a-entity>
+		<a-entity rotation="-90 180 0">
+			<a-entity geometry="primitive: plane; width: 10; height: 3;" material="color: crimson" position="0 10 0" rotation="90 0 0" text="align: center; value: 180"></a-entity>
+		</a-entity>
+
+		<a-entity camera look-controls>
+			<a-entity cursor="fuse: true; maxDistance: 30; timeout: 500" position="0 0 -2" geometry="primitive: plane; width: 0.05; height: 0.05" material="color: white; shader: flat">
+			</a-entity>
+		</a-entity>
+
+		<a-sky color="#111111"></a-sky>
+	</a-scene>
+
+	<script src="./HTML/WebVR/a-frame/game.js"></script>
+</body>
+
+</html>
