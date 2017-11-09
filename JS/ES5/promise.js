@@ -15,345 +15,367 @@
  */
 (function promisePolyfill(umd, scope) {
 
-	// #region POLYFILL PRIVATE PROPERTIES
-	var states = {
-		PENDING: "pending",
-		RESOLVED: "resolved",
-		REJECTED: "rejected"
-	};
-	// #endregion
+  // #region POLYFILL PRIVATE PROPERTIES
+  var states = {
+    PENDING: "pending",
+    RESOLVED: "resolved",
+    REJECTED: "rejected"
+  },
+    defineProperty;
+  // #endregion
 
-	// #region POLYFILL PRIVATE METHODS
-	function resolve(value) {
+  // #region DEPENDENCY
+  if (!Object.defineProperty) {
 
-		// Ignore if it was previously resolved
-		if (this.parent['[[PromiseStatus]]'] !== states.PENDING) {
+    defineProperty = function defineProperty(parent, property, options) {
 
-			return;
+      if (parent && property && options && options.value) {
 
-		}
+        parent[property] = options.value;
 
-		// Update the status
-		this.parent['[[PromiseValue]]'] = value;
-		this.parent['[[PromiseStatus]]'] = states.RESOLVED;
+      }
 
-		if (value instanceof Promise) {
+    };
 
-			value.then(function (promisedValue) {
+  } else {
 
-				this.thens.child(promisedValue);
-				this.thens.parent(promisedValue);
+    defineProperty = Object.defineProperty;
 
-			}.bind(this));
+  }
+  // #endregion
 
-		} else {
+  // #region POLYFILL PRIVATE METHODS
+  function resolve(value) {
 
-			setTimeout(function () {
+    // Ignore if it was previously resolved
+    if (this.parent['[[PromiseStatus]]'] !== states.PENDING) {
 
-				this.thens.child(value);
-				this.thens.parent(value);
+      return;
 
+    }
 
-			}.bind(this));
+    // Update the status
+    this.parent['[[PromiseValue]]'] = value;
+    this.parent['[[PromiseStatus]]'] = states.RESOLVED;
 
-		}
+    // TODO: allow to respond with functions
+    if (value instanceof Promise) {
 
-	}
+      value.then(function (promisedValue) {
 
-	function reject(value) {
+        this.thens.child(promisedValue);
+        this.thens.parent(promisedValue);
 
-		var parentCatchCallback,
-			childCatchCallback;
+      }.bind(this));
 
-		// Ignore if it was previously resolved
-		if (this.parent['[[PromiseStatus]]'] !== states.PENDING) {
+    } else {
 
-			return;
+      setTimeout(function () {
 
-		}
+        this.thens.child(value);
+        this.thens.parent(value);
 
-		// Update the status
-		this.parent['[[PromiseValue]]'] = value;
-		this.parent['[[PromiseStatus]]'] = states.REJECTED;
-		if (console && console.error) {
 
-			console.error('Uncaught (in promise)', value);
+      }.bind(this));
 
-		} else if (console && console.exception) {
+    }
 
-			console.exception('Uncaught (in promise)', value);
+  }
 
-		}
+  function reject(value) {
 
-		setTimeout(function () {
+    var parentCatchCallback,
+      childCatchCallback;
 
-			this.catches.parent.bind(this.parent);
-			this.catches.parent(value);
+    // Ignore if it was previously resolved
+    if (this.parent['[[PromiseStatus]]'] !== states.PENDING) {
 
-			this.catches.child.bind(this.parent);
-			this.catches.child(value);
+      return;
 
-		}.bind(this));
+    }
 
-		return value;
+    // Update the status
+    this.parent['[[PromiseValue]]'] = value;
+    this.parent['[[PromiseStatus]]'] = states.REJECTED;
+    if (console && console.error) {
 
-	}
-	// #endregion
+      console.error('Uncaught (in promise)', value);
 
-	function Promise() {
+    } else if (console && console.exception) {
 
-		var resolver = arguments[0],
-			emptyFn = function (value) { return value; },
-			thenable = {
-				parent: this,
-				child: null,
-				thens: { parent: emptyFn, child: emptyFn },
-				catches: { parent: emptyFn, child: emptyFn }
-			};
+      console.exception('Uncaught (in promise)', value);
 
-		if (!(this instanceof Promise)) {
+    }
 
-			throw new TypeError('undefined is not a promise');
+    setTimeout(function () {
 
-		}
+      this.catches.parent.bind(this.parent);
+      this.catches.parent(value);
 
-		if (typeof resolver !== 'function') {
+      this.catches.child.bind(this.parent);
+      this.catches.child(value);
 
-			throw new TypeError('Promise resolver ' + resolver + ' is not a function');
+    }.bind(this));
 
-		}
+    return value;
 
-		this['[[PromiseStatus]]'] = states.PENDING;
-		this['[[PromiseValue]]'] = undefined;
-		Object.defineProperty(this, '__prototype__', {
-			value: {}
-		});
+  }
+  // #endregion
 
-		Object.defineProperty(this.__prototype__, 'then', {
-			value: function _then() {
+  function Promise() {
 
-				var callback = arguments[0];
+    var resolver = arguments[0],
+      emptyFn = function (value) { return value; },
+      thenable = {
+        parent: this,
+        child: null,
+        thens: { parent: emptyFn, child: emptyFn },
+        catches: { parent: emptyFn, child: emptyFn }
+      };
 
-				if (thenable.child) {
+    if (!(this instanceof Promise)) {
 
-					return thenable.child.then(function (value) {
+      throw new TypeError('undefined is not a promise');
 
-						return callback(value);
+    }
 
-					});
+    if (typeof resolver !== 'function') {
 
-				} else {
+      throw new TypeError('Promise resolver ' + resolver + ' is not a function');
 
-					thenable.child = new Promise(function (__then, __catch) {
+    }
 
-						thenable.thens.child = function (value) {
+    this['[[PromiseStatus]]'] = states.PENDING;
+    this['[[PromiseValue]]'] = undefined;
+    defineProperty(this, '__prototype__', {
+      value: {}
+    });
 
-							return __then(value);
+    defineProperty(this.__prototype__, 'then', {
+      value: function _then() {
 
-						}
+        var callback = arguments[0];
 
-					});
-					return new Promise(function (__then, __catch) {
+        if (thenable.child) {
 
-						thenable.thens.parent = function (value) {
+          return thenable.child.then(function (value) {
 
-							return __then(callback(value));
+            return callback(value);
 
-						}
+          });
 
-					});
+        } else {
 
-				}
+          thenable.child = new Promise(function (__then, __catch) {
 
-			}
-		});
+            thenable.thens.child = function (value) {
 
-		Object.defineProperty(this.__prototype__, 'catch', {
-			value: function _catch() {
+              return __then(value);
 
-				var callback = arguments[0];
+            }
 
-				if (thenable.child) {
+          });
+          return new Promise(function (__then, __catch) {
 
-					return thenable.child['catch'](callback);
+            thenable.thens.parent = function (value) {
 
-				} else {
+              return __then(callback(value));
 
-					thenable.child = new Promise(function (__then, __catch) {
+            }
 
-						thenable.catches.child = function (value) {
+          });
 
-							return __catch(value);
+        }
 
-						}
+      }
+    });
 
-					});
-					return new Promise(function (__then, __catch) {
+    defineProperty(this.__prototype__, 'catch', {
+      value: function _catch() {
 
-						thenable.catches.parent = function (value) {
+        var callback = arguments[0];
 
-							return __catch(callback(value));
+        if (thenable.child) {
 
-						}
+          return thenable.child['catch'](callback);
 
-					});
+        } else {
 
-				}
+          thenable.child = new Promise(function (__then, __catch) {
 
-			}
-		});
+            thenable.catches.child = function (value) {
 
+              return __catch(value);
 
-		try {
+            }
 
-			resolver(resolve.bind(thenable), reject.bind(thenable));
+          });
+          return new Promise(function (__then, __catch) {
 
-		} catch (e) {
+            thenable.catches.parent = function (value) {
 
-			reject(e);
+              return __catch(callback(value));
 
-		}
+            }
 
-	}
+          });
 
-	Object.defineProperty(Promise.prototype, 'then', {
-		value: function _then() {
+        }
 
-			return this.__prototype__.then(arguments[0]);
+      }
+    });
 
-		}
-	});
 
-	Object.defineProperty(Promise.prototype, 'catch', {
-		value: function _catch() {
+    try {
 
-			return this.__prototype__.catch(arguments[0]);
+      resolver(resolve.bind(thenable), reject.bind(thenable));
 
-		}
-	});
+    } catch (e) {
 
-	Object.defineProperty(Promise, "resolve", {
-		value: function resolve() {
+      reject(e);
 
-			var thenable = arguments[0];
+    }
 
-			return new Promise(function (__then) {
+  }
 
-				__then();
+  defineProperty(Promise.prototype, 'then', {
+    value: function _then() {
 
-			}).then(thenable.then);
+      return this.__prototype__.then(arguments[0]);
 
-		}
-	});
+    }
+  });
 
-	Object.defineProperty(Promise, "reject", {
-		value: function reject() {
+  defineProperty(Promise.prototype, 'catch', {
+    value: function _catch() {
 
-			var thenable = arguments[0];
+      return this.__prototype__.catch(arguments[0]);
 
-			return new Promise(function (__then, __catch) {
+    }
+  });
 
-				__catch();
+  defineProperty(Promise, "resolve", {
+    value: function resolve() {
 
-			})['catch'](thenable['catch']);
+      var thenable = arguments[0];
 
-		}
-	});
+      return new Promise(function (__then) {
 
-	Object.defineProperty(Promise, "all", {
-		value: function all() {
+        __then();
 
-			var promises = arguments[0];
+      }).then(thenable.then);
 
-			return new Promise(function (__then, __catch) {
+    }
+  });
 
-				var length = promises.length,
-					response = [];
+  defineProperty(Promise, "reject", {
+    value: function reject() {
 
-				function check() {
+      var thenable = arguments[0];
 
-					if (promises.length === response.length) {
+      return new Promise(function (__then, __catch) {
 
-						__then(response);
+        __catch();
 
-					}
+      })['catch'](thenable['catch']);
 
-				}
+    }
+  });
 
-				promises.forEach(function (promise) {
+  defineProperty(Promise, "all", {
+    value: function all() {
 
-					promise.then(function (value) {
+      var promises = arguments[0];
 
-						response.push(value);
-						check();
+      return new Promise(function (__then, __catch) {
 
-					}).catch(function (value) {
+        var length = promises.length,
+          response = [];
 
-						__catch(value);
+        function check() {
 
-					});
-				});
+          if (promises.length === response.length) {
 
-			});
+            __then(response);
 
-		}
-	});
+          }
 
-	Object.defineProperty(Promise, "race", {
-		value: function race() {
+        }
 
-			var promises = arguments[0];
+        promises.forEach(function (promise) {
 
-			return new Promise(function (__then, __catch) {
+          promise.then(function (value) {
 
-				var length = promises.length,
-					response = [];
+            response.push(value);
+            check();
 
-				promises.forEach(function (promise) {
+          }).catch(function (value) {
 
-					promise.then(function (value) {
+            __catch(value);
 
-						__then(value);
+          });
+        });
 
-					}).catch(function (value) {
+      });
 
-						__catch(value);
+    }
+  });
 
-					});
-				});
+  defineProperty(Promise, "race", {
+    value: function race() {
 
-			});
+      var promises = arguments[0];
 
-		}
-	});
+      return new Promise(function (__then, __catch) {
 
-	umd('Promise', Promise);
+        var length = promises.length,
+          response = [];
+
+        promises.forEach(function (promise) {
+
+          promise.then(function (value) {
+
+            __then(value);
+
+          }).catch(function (value) {
+
+            __catch(value);
+
+          });
+        });
+
+      });
+
+    }
+  });
+
+  umd('Promise', Promise);
 
 })(function UMD(name, definition) {
 
-	var scope;
+  var scope;
 
-	if (typeof module !== 'undefined' && module.exports) {
+  if (typeof module !== 'undefined' && module.exports) {
 
-		module.exports = definition;
+    module.exports = definition;
 
-	} else if (typeof exports !== 'undefined') {
+  } else if (typeof exports !== 'undefined') {
 
-		exports = definition;
+    exports = definition;
 
-	} else if (typeof define === 'function' && define.amd) {
+  } else if (typeof define === 'function' && define.amd) {
 
-		define(function AMD() {
+    define(function AMD() {
 
-			return definition;
+      return definition;
 
-		});
+    });
 
-	} else {
+  } else {
 
-		scope = typeof global !== 'undefined' ? global : this;
-		scope[name] = scope[name] || definition;
+    scope = typeof global !== 'undefined' ? global : this;
+    scope[name] = scope[name] || definition;
 
-	}
+  }
 
 });
