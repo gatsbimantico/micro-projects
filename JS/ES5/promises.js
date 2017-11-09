@@ -37,12 +37,26 @@
 		this.parent['[[PromiseValue]]'] = value;
 		this.parent['[[PromiseStatus]]'] = states.RESOLVED;
 
-		setTimeout(function () {
+		if (value instanceof Promise) {
 
-			this.thens.child(value);
-			this.thens.parent(value);
+			value.then(function (promisedValue) {
 
-		}.bind(this));
+				this.thens.child(promisedValue);
+				this.thens.parent(promisedValue);
+
+			}.bind(this));
+
+		} else {
+
+			setTimeout(function () {
+
+				this.thens.child(value);
+				this.thens.parent(value);
+
+
+			}.bind(this));
+
+		}
 
 	}
 
@@ -61,7 +75,15 @@
 		// Update the status
 		this.parent['[[PromiseValue]]'] = value;
 		this.parent['[[PromiseStatus]]'] = states.REJECTED;
-		console.error('Uncaught (in promise)', value);
+		if (console && console.error) {
+
+			console.error('Uncaught (in promise)', value);
+
+		} else if (console && console.exception) {
+
+			console.exception('Uncaught (in promise)', value);
+
+		}
 
 		setTimeout(function () {
 
@@ -81,7 +103,6 @@
 	function Promise() {
 
 		var resolver = arguments[0],
-			prototype,
 			emptyFn = function (value) { return value; },
 			thenable = {
 				parent: this,
@@ -102,76 +123,86 @@
 
 		}
 
-		/**
-		 * Creates a new scope to avoid conflicts
-		 * in the name of the prototype function
-		 */
-		(function () { prototype = function Promise() { }; }());
-
-		this.__proto__ = prototype;
 		this['[[PromiseStatus]]'] = states.PENDING;
 		this['[[PromiseValue]]'] = undefined;
+		Object.defineProperty(this, '__prototype__', {
+			value: {}
+		});
 
-		prototype.then = function thenableThen(callback) {
+		Object.defineProperty(this.__prototype__, 'then', {
+			value: function _then() {
 
-			if (thenable.child) {
+				var callback = arguments[0];
 
-				return thenable.child.then(callback);
+				if (thenable.child) {
 
-			} else {
+					return thenable.child.then(function (value) {
 
-				thenable.child = new Promise(function (onFulfilled, onRejected) {
+						return callback(value);
 
-					thenable.thens.child = function (value) {
+					});
 
-						onFulfilled(value);
+				} else {
 
-					}
+					thenable.child = new Promise(function (__then, __catch) {
 
-				});
-				return new Promise(function (onFulfilled, onRejected) {
+						thenable.thens.child = function (value) {
 
-					thenable.thens.parent = function (value) {
+							return __then(value);
 
-						onFulfilled(callback(value));
+						}
 
-					}
+					});
+					return new Promise(function (__then, __catch) {
 
-				});
+						thenable.thens.parent = function (value) {
 
-			}
+							return __then(callback(value));
 
-		};
-		prototype['catch'] = function thenableCatch(callback) {
+						}
 
-			if (thenable.child) {
+					});
 
-				return thenable.child['catch'](callback);
-
-			} else {
-
-				thenable.child = new Promise(function (onFulfilled, onRejected) {
-
-					thenable.catches.child = function (value) {
-
-						onRejected(value);
-
-					}
-
-				});
-				return new Promise(function (onFulfilled, onRejected) {
-
-					thenable.catches.parent = function (value) {
-
-						onRejected(callback(value));
-
-					}
-
-				});
+				}
 
 			}
+		});
 
-		};
+		Object.defineProperty(this.__prototype__, 'catch', {
+			value: function _catch() {
+
+				var callback = arguments[0];
+
+				if (thenable.child) {
+
+					return thenable.child['catch'](callback);
+
+				} else {
+
+					thenable.child = new Promise(function (__then, __catch) {
+
+						thenable.catches.child = function (value) {
+
+							return __catch(value);
+
+						}
+
+					});
+					return new Promise(function (__then, __catch) {
+
+						thenable.catches.parent = function (value) {
+
+							return __catch(callback(value));
+
+						}
+
+					});
+
+				}
+
+			}
+		});
+
 
 		try {
 
@@ -185,93 +216,118 @@
 
 	}
 
-	Promise.resolve = function resolve() {
+	Object.defineProperty(Promise.prototype, 'then', {
+		value: function _then() {
 
-		var thenable = arguments[0];
+			return this.__prototype__.then(arguments[0]);
 
-		return new Promise(function (onFulfilled) {
+		}
+	});
 
-			onFulfilled();
+	Object.defineProperty(Promise.prototype, 'catch', {
+		value: function _catch() {
 
-		}).then(thenable.then);
+			return this.__prototype__.catch(arguments[0]);
 
-	};
+		}
+	});
 
-	Promise.reject = function reject() {
+	Object.defineProperty(Promise, "resolve", {
+		value: function resolve() {
 
-		var thenable = arguments[0];
+			var thenable = arguments[0];
 
-		return new Promise(function (onFulfilled, onRejected) {
+			return new Promise(function (__then) {
 
-			onRejected();
+				__then();
 
-		})['catch'](thenable['catch']);
+			}).then(thenable.then);
 
-	};
+		}
+	});
 
-	Promise['all'] = function () {
+	Object.defineProperty(Promise, "reject", {
+		value: function reject() {
 
-		var promises = arguments[0];
+			var thenable = arguments[0];
 
-		return new Promise(function (onFulfilled, onRejected) {
+			return new Promise(function (__then, __catch) {
 
-			var length = promises.length,
-				response = [];
+				__catch();
 
-			function check() {
+			})['catch'](thenable['catch']);
 
-				if (promises.length === response.length) {
+		}
+	});
 
-					onFulfilled(response);
+	Object.defineProperty(Promise, "all", {
+		value: function all() {
+
+			var promises = arguments[0];
+
+			return new Promise(function (__then, __catch) {
+
+				var length = promises.length,
+					response = [];
+
+				function check() {
+
+					if (promises.length === response.length) {
+
+						__then(response);
+
+					}
 
 				}
 
-			}
+				promises.forEach(function (promise) {
 
-			promises.forEach(function (promise) {
+					promise.then(function (value) {
 
-				promise.then(function (value) {
+						response.push(value);
+						check();
 
-					response.push(value);
-					check();
+					}).catch(function (value) {
 
-				}).catch(function (value) {
+						__catch(value);
 
-					onRejected(value);
-
+					});
 				});
+
 			});
 
-		});
+		}
+	});
 
-	};
-	Promise.race = function () {
+	Object.defineProperty(Promise, "race", {
+		value: function race() {
 
-		var promises = arguments[0];
+			var promises = arguments[0];
 
-		return new Promise(function (onFulfilled, onRejected) {
+			return new Promise(function (__then, __catch) {
 
-			var length = promises.length,
-				response = [];
+				var length = promises.length,
+					response = [];
 
-			promises.forEach(function (promise) {
+				promises.forEach(function (promise) {
 
-				promise.then(function (value) {
+					promise.then(function (value) {
 
-					onFulfilled(value);
+						__then(value);
 
-				}).catch(function (value) {
+					}).catch(function (value) {
 
-					onRejected(value);
+						__catch(value);
 
+					});
 				});
+
 			});
 
-		});
+		}
+	});
 
-	};
-
-	umd('PromiseA', Promise);
+	umd('Promise', Promise);
 
 })(function UMD(name, definition) {
 
