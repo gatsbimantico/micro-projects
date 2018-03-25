@@ -128,7 +128,7 @@ body > nav > #page > #content .card {
 	position: relative;
 	padding: 1rem;
 	background: white;
-	color: #333;
+	color: black;
 	border-radius: 0px;
 	box-shadow: 0 8px 10px -6px rgba(0, 0, 0, 0.6);
 	transition: 350ms;
@@ -144,6 +144,14 @@ body > nav > #page > #content .card > h2 {
 
 body > nav > #page > #content .card > h3 {
 	margin-top: 0.5rem;
+}
+
+p {
+	margin: 1em 0;
+}
+
+li {
+	margin: .5em 0;
 }
 
 iframe,
