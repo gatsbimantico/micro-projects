@@ -2,7 +2,7 @@
 	box-sizing: border-box;
 	margin: 0;
 	font-weight: 100;
-	font-family: 'Roboto', sans-serif;
+	font-family: 'Lato', 'Roboto', 'Arial', sans-serif;
 }
 
 html,
@@ -148,10 +148,6 @@ p {
 	overflow: auto;
 }
 
-li {
-	margin: .3em 0;
-}
-
 ul {
 	padding: 0 0 0 20px;
 }
@@ -174,6 +170,9 @@ iframe,
 select,
 input {
 	width: 100%;
+	height: 2.5rem;
+    	font-size: 1rem;
+    	line-height: 2.5rem;
 	padding: 0.5rem;
 	margin: 0.5em 0;
 }
