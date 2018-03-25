@@ -144,7 +144,8 @@ body > nav > #page > #content .card > h3 {
 }
 
 p {
-	margin: 1em 0;
+	padding: .5em 0;
+	overflow: auto;
 }
 
 li {
