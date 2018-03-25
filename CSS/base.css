@@ -154,6 +154,10 @@ li {
 	margin: .3em 0;
 }
 
+ul {
+	padding: 0 0 0 20px;
+}
+
 iframe,
 .img {
 	width: 100%;
